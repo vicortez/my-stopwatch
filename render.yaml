@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: my-stopwatch
+    runtime: node
+    plan: free
+    buildCommand: cd server && npm install && npm run build:all
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
