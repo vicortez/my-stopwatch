@@ -7,4 +7,4 @@ services:
     startCommand: cd server && npm start
     envVars:
       - key: NODE_ENV
-        value: production
+        value: prod
