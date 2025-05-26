@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "prettier.semi": false,
+  "prettier.singleQuote": true
+}
