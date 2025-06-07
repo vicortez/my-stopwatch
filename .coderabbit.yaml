@@ -1,0 +1,7 @@
+#...
+reviews:
+  #...
+  path_instructions:
+    - path: '**/*.*'
+      instructions: |
+        Review that, if a context provider was added, it is added to the app context as a provider.

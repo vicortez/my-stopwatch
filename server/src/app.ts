@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import stopwatchRoutes from './routes/stopwatchRoutes.js'
 
 console.log('starting dev server: loading configs')
 
@@ -43,6 +44,9 @@ app.get('/api/memory', (req, res) => {
     external: `${Math.round(usage.external / 1024 / 1024)}MB`,
   })
 })
+
+// mount our routes
+app.use('/api/stopwatch', stopwatchRoutes)
 
 // Serve static files from React build in production
 if (process.env.NODE_ENV === 'prod') {

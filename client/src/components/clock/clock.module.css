@@ -1,0 +1,6 @@
+/* we might want to style the clock font size directly, like this. OR we could have the 
+font size be dependent on the outside container width and have the clock component just
+try to fill its parent with text. */
+.clock {
+  font-size: clamp(3rem, 16vw, 12rem);
+}

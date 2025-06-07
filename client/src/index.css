@@ -1,11 +1,19 @@
 /* TAILWIND CONFIGS */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --color-twitter-blue: #1da1f2;
+  --text-color: rgba(255, 255, 255, 0.9);
 }
 
+@theme {
+  --font-sevenseg: 'DSEG7 Classic', monospace;
+}
+
+@import '@fontsource/dseg7-classic';
+
 /* -- */
+
 /* Some default styling - review this! */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -13,8 +21,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--text-color);
+  background-color: #000000;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -75,3 +83,20 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* if trying to set font size based on container size instead of font size. */
+/* .clock-container {
+  width: clamp(100px, 90vw, 1080px);
+  height: clamp(80px, 90vh, 540px);
+  container-type: size; 
+  container-name: clock;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #213547;
+}
+
+.date-text {
+  font-size: 25cqmin; 
+  white-space: nowrap;
+} */

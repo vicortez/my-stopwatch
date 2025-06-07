@@ -3,5 +3,8 @@
     "*.css": "tailwindcss"
   },
   "prettier.semi": false,
-  "prettier.singleQuote": true
+  "prettier.singleQuote": true,
+  "prettier.printWidth": 100,
+  "cssModules.camelCase": true,
+  "editor.rulers": [100]
 }
