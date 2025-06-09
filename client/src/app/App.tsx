@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import Clock from '../components/clock/Clock'
+import { useKeepAlive } from '../hooks/useKeepAlive'
 import { useStopwatch } from '../store/StopwatchProvider'
 import { cn } from '../utils/cssUtils'
 
@@ -9,12 +10,20 @@ function App() {
   // const [loading, setLoading] = useState(true)
   const intervalRef = useRef<number | null>(null)
 
+  useKeepAlive()
+
   const handleMouseEnter = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+    }
     setShowControls(true)
   }
 
   const handleMouseLeave = () => {
-    setShowControls(false)
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+    }
+    intervalRef.current = setInterval(() => setShowControls(false), 500)
   }
 
   const handleTouch = () => {
