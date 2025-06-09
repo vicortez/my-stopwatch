@@ -1,4 +1,5 @@
 import { cn } from '../../utils/cssUtils'
+import { padTime } from '../../utils/timeUtils'
 import styles from './clock.module.css'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -8,8 +9,6 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const Clock = ({ hours, minutes, seconds, className, ...props }: Props) => {
-  const formatTime = (time: number) => time.toString().padStart(2, '0')
-
   return (
     <>
       <div
@@ -20,7 +19,7 @@ export const Clock = ({ hours, minutes, seconds, className, ...props }: Props) =
         {...props}
       >
         <span>
-          {formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}
+          {padTime(hours)}:{padTime(minutes)}:{padTime(seconds)}
         </span>
       </div>
     </>

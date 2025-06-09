@@ -9,6 +9,10 @@ import {
   type ReactNode,
 } from 'react'
 import type { ConnectionState, StopwatchTime } from '../types/models'
+import { padTime } from '../utils/timeUtils'
+
+const formatTime = (time: StopwatchTime) =>
+  `${padTime(time.hours)}:${padTime(time.minutes)}:${padTime(time.seconds)}`
 
 interface IStopwatchContext {
   connectionState: ConnectionState
@@ -68,6 +72,7 @@ export const StopwatchProvider = ({ children }: PropType) => {
         eventSource.onmessage = (msgEvent: MessageEvent<string>) => {
           try {
             const data = JSON.parse(msgEvent.data) as StopwatchTime
+            document.title = formatTime(data)
             console.log(data)
             setStopwatchTime(data)
           } catch (parseError) {
