@@ -1,14 +1,32 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Clock from '../components/clock/Clock'
 import { useKeepAlive } from '../hooks/useKeepAlive'
 import { useStopwatch } from '../store/StopwatchProvider'
 import { cn } from '../utils/cssUtils'
+
+let wakeLock = null
 
 function App() {
   const { connectionState, error, stopwatchTime, play, pause, reset } = useStopwatch()
   const [showControls, setShowControls] = useState(false)
   // const [loading, setLoading] = useState(true)
   const intervalRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    requestWakeLock()
+  }, [])
+
+  const requestWakeLock = async () => {
+    try {
+      wakeLock = await navigator.wakeLock.request('screen')
+      wakeLock.addEventListener('release', () => {
+        console.log('Screen Wake Lock released')
+      })
+      console.log('Screen Wake Lock is active')
+    } catch (err: any) {
+      console.error(`${err.name}, ${err.message}`)
+    }
+  }
 
   useKeepAlive()
 
