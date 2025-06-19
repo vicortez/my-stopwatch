@@ -21,7 +21,8 @@ router.get('/consume', (req, res) => {
       console.log('Tried to send data on a destroyed connection')
       return
     }
-    res.write(`data: ${JSON.stringify(time)}\n\n`)
+    const stopwatchData = { stopwatchTime: time, isRunning: stopwatch.isRunning() }
+    res.write(`data: ${JSON.stringify(stopwatchData)}\n\n`)
   })
 
   res.on('close', () => {
@@ -33,7 +34,8 @@ router.get('/consume', (req, res) => {
     unsubscribe()
   })
 
-  res.write(`data: ${JSON.stringify(stopwatch.stopwatchTime)}\n\n`)
+  const stopwatchData = { stopwatchTime: stopwatch.stopwatchTime, isRunning: stopwatch.isRunning() }
+  res.write(`data: ${JSON.stringify(stopwatchData)}\n\n`)
 })
 
 router.post('/play', (req, res) => {

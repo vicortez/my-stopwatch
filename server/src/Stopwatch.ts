@@ -63,12 +63,14 @@ export class Stopwatch {
       console.debug(`stopwatch running. ${this.stopwatchTime.toString()}`)
       this._emit()
     }, 1000)
+    this._emit()
   }
 
   pause = () => {
     if (!this.intervalRef) return
     clearInterval(this.intervalRef)
     this.intervalRef = null
+    this._emit()
   }
 
   reset = () => {

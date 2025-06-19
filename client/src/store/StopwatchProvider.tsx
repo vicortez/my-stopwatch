@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import type { ConnectionState, StopwatchTime } from '../types/models'
+import type { ConnectionState, StopwatchData, StopwatchTime } from '../types/models'
 import { padTime } from '../utils/timeUtils'
 
 const formatTime = (time: StopwatchTime) =>
@@ -18,6 +18,7 @@ interface IStopwatchContext {
   connectionState: ConnectionState
   error: string | null
   stopwatchTime: StopwatchTime
+  isRunning: boolean
   play: () => void
   pause: () => void
   reset: () => void
@@ -37,6 +38,7 @@ const StopwatchContext = createContext<IStopwatchContext | null>(null)
 export const StopwatchProvider = ({ children }: PropType) => {
   const [connectionState, setConnectionState] = useState<ConnectionState>('DISCONNECTED')
   const [error, setError] = useState<string | null>(null)
+  const [isRunning, setIsRunning] = useState<boolean>(false)
   const [stopwatchTime, setStopwatchTime] = useState<StopwatchTime>(defaultStopwatchTime)
 
   const play = useCallback(async () => {
@@ -71,10 +73,11 @@ export const StopwatchProvider = ({ children }: PropType) => {
         }
         eventSource.onmessage = (msgEvent: MessageEvent<string>) => {
           try {
-            const data = JSON.parse(msgEvent.data) as StopwatchTime
-            document.title = formatTime(data)
-            console.log(data)
-            setStopwatchTime(data)
+            const { stopwatchTime, isRunning } = JSON.parse(msgEvent.data) as StopwatchData
+            document.title = formatTime(stopwatchTime) + isRunning ? '' : '(⏸︎)'
+            console.log(stopwatchTime)
+            setStopwatchTime(stopwatchTime)
+            setIsRunning(isRunning)
           } catch (parseError) {
             console.error('Failed to parse SSE data:', parseError)
             setError('Invalid data received from server')
@@ -102,11 +105,12 @@ export const StopwatchProvider = ({ children }: PropType) => {
       connectionState,
       error,
       stopwatchTime,
+      isRunning,
       play,
       pause,
       reset,
     }),
-    [connectionState, error, stopwatchTime, play, pause, reset]
+    [connectionState, error, stopwatchTime, isRunning, play, pause, reset]
   )
 
   return <StopwatchContext value={contextValue}>{children}</StopwatchContext>

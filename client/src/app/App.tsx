@@ -7,14 +7,42 @@ import { cn } from '../utils/cssUtils'
 let wakeLock = null
 
 function App() {
-  const { connectionState, error, stopwatchTime, play, pause, reset } = useStopwatch()
+  const { connectionState, error, stopwatchTime, isRunning, play, pause, reset } = useStopwatch()
   const [showControls, setShowControls] = useState(false)
+  const [blinkingPauseIndicator, setBlinkingPauseIndicator] = useState(false)
   // const [loading, setLoading] = useState(true)
   const intervalRef = useRef<number | null>(null)
 
   useEffect(() => {
     requestWakeLock()
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
   }, [])
+
+  // blink text color on paused
+  const blinkingIntervalRef = useRef<number>(null)
+  useEffect(() => {
+    if (blinkingIntervalRef.current) {
+      clearInterval(blinkingIntervalRef.current)
+    }
+    const hasTimeElapsed = stopwatchTime.hours + stopwatchTime.minutes + stopwatchTime.seconds > 0
+    if (!isRunning && hasTimeElapsed) {
+      blinkingIntervalRef.current = setInterval(() => {
+        setBlinkingPauseIndicator((val) => !val)
+      }, 1000)
+    } else {
+      setBlinkingPauseIndicator(false)
+    }
+
+    return () => {
+      if (blinkingIntervalRef.current) {
+        clearInterval(blinkingIntervalRef.current)
+      }
+    }
+  }, [isRunning])
 
   const requestWakeLock = async () => {
     try {
@@ -49,7 +77,7 @@ function App() {
     if (intervalRef.current) {
       clearInterval(intervalRef.current)
     }
-    intervalRef.current = setInterval(() => setShowControls(false), 5000)
+    intervalRef.current = setInterval(() => setShowControls(false), 4000)
   }
 
   return (
@@ -62,7 +90,7 @@ function App() {
         <section className="min-h-screen min-w-screen flex items-center justify-center">
           <div className={cn(`py-2 px-4`)}>
             <Clock
-              className="date-text"
+              className={cn({ 'text-gray-500': blinkingPauseIndicator }, 'date-text')}
               hours={stopwatchTime.hours}
               minutes={stopwatchTime.minutes}
               seconds={stopwatchTime.seconds}
