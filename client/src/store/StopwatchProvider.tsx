@@ -74,7 +74,7 @@ export const StopwatchProvider = ({ children }: PropType) => {
         eventSource.onmessage = (msgEvent: MessageEvent<string>) => {
           try {
             const { stopwatchTime, isRunning } = JSON.parse(msgEvent.data) as StopwatchData
-            document.title = formatTime(stopwatchTime) + isRunning ? '' : '(⏸︎)'
+            document.title = `${isRunning ? '' : '⏸️'} ${formatTime(stopwatchTime)}`
             console.log(stopwatchTime)
             setStopwatchTime(stopwatchTime)
             setIsRunning(isRunning)
