@@ -12,7 +12,7 @@ dotenv.config({ path: '.env.local', override: false }) // loads secret local var
 dotenv.config({ path: '.env.public', override: false }) // loads base env vars after.
 
 const app = express()
-const PORT = process.env.PORT
+const PORT = Number(process.env.PORT)
 const NODE_ENV = process.env.NODE_ENV
 
 console.log('starting dev server: loading current path')
