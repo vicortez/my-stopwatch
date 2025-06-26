@@ -22,20 +22,6 @@ function Index() {
     }
   }, [])
 
-  useEffect(() => {
-    let char = ''
-    if (connectionState === 'CONNECTING') {
-      char = '🔃'
-    } else if (connectionState === 'DISCONNECTED') {
-      char = '📵'
-    } else if (connectionState === 'ERROR') {
-      char = '✖'
-    } else if (connectionState === 'FAILED') {
-      char = '❌'
-    }
-    document.title = `${char} ${document.title}`
-  }, [connectionState])
-
   // blink text color on paused
   const blinkingIntervalRef = useRef<number>(null)
   useEffect(() => {

@@ -70,11 +70,12 @@ export const StopwatchProvider = ({ children }: PropType) => {
           console.error('EventSource error:', event)
           setConnectionState('ERROR')
           setError('Connection error occurred')
+          document.title = getTitle(isRunning, stopwatchTime, connectionState)
         }
         eventSource.onmessage = (msgEvent: MessageEvent<string>) => {
           try {
             const { stopwatchTime, isRunning } = JSON.parse(msgEvent.data) as StopwatchData
-            document.title = `${isRunning ? '' : '⏸️'} ${formatTime(stopwatchTime)}`
+            document.title = getTitle(isRunning, stopwatchTime, connectionState)
             console.log(stopwatchTime)
             setStopwatchTime(stopwatchTime)
             setIsRunning(isRunning)
@@ -87,6 +88,7 @@ export const StopwatchProvider = ({ children }: PropType) => {
         console.error('Exception. Failed to create EventSource:', connectionError)
         setError('Failed to establish connection')
         setConnectionState('ERROR')
+        document.title = getTitle(isRunning, stopwatchTime, connectionState)
       }
     }
     connectEventSource()
@@ -122,4 +124,22 @@ export const useStopwatch = (): IStopwatchContext => {
     throw new Error(' must be used within a StopwatchProvider')
   }
   return context
+}
+
+function getTitle(
+  isRunning: boolean,
+  stopwatchTime: StopwatchTime,
+  connectionState: ConnectionState
+): string {
+  let connStateIndicator = ''
+  if (connectionState === 'CONNECTING') {
+    connStateIndicator = '🔃'
+  } else if (connectionState === 'DISCONNECTED') {
+    connStateIndicator = '📵'
+  } else if (connectionState === 'ERROR') {
+    connStateIndicator = '✖'
+  } else if (connectionState === 'FAILED') {
+    connStateIndicator = '❌'
+  }
+  return `${connStateIndicator}${isRunning ? '' : '⏸️'} ${formatTime(stopwatchTime)}`
 }
