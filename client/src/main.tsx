@@ -9,7 +9,6 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './app/App.tsx'
 import './index.css'
-import { StopwatchProvider } from './store/StopwatchProvider.tsx'
 
 const rootElement = document.getElementById('root')
 
@@ -17,9 +16,7 @@ if (rootElement) {
   const root = createRoot(rootElement)
   root.render(
     <StrictMode>
-      <StopwatchProvider>
-        <App />
-      </StopwatchProvider>
+      <App />
     </StrictMode>
   )
 } else {

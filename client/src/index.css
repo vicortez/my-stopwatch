@@ -10,6 +10,11 @@
   --font-sevenseg: 'DSEG7 Classic', monospace;
 }
 
+@theme {
+  /* --breakpoint-*: initial; */
+  --breakpoint-xs: 20rem;
+}
+
 @import '@fontsource/dseg7-classic';
 
 /* -- */

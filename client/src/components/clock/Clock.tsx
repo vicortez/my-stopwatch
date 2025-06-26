@@ -18,9 +18,9 @@ export const Clock = ({ hours, minutes, seconds, className, ...props }: Props) =
         )}
         {...props}
       >
-        <span>
+        <div className="flex justify-center">
           {padTime(hours)}:{padTime(minutes)}:{padTime(seconds)}
-        </span>
+        </div>
       </div>
     </>
   )
