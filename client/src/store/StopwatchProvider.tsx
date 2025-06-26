@@ -65,20 +65,21 @@ export const StopwatchProvider = ({ children }: PropType) => {
           console.log('EventSource connection opened')
           setConnectionState('CONNECTED')
           setError(null)
+          document.title = getTitle(isRunning, stopwatchTime, 'CONNECTED')
         }
         eventSource.onerror = (event) => {
           console.error('EventSource error:', event)
           setConnectionState('ERROR')
           setError('Connection error occurred')
-          document.title = getTitle(isRunning, stopwatchTime, connectionState)
+          document.title = getTitle(isRunning, stopwatchTime, 'ERROR')
         }
         eventSource.onmessage = (msgEvent: MessageEvent<string>) => {
           try {
             const { stopwatchTime, isRunning } = JSON.parse(msgEvent.data) as StopwatchData
-            document.title = getTitle(isRunning, stopwatchTime, connectionState)
             console.log(stopwatchTime)
             setStopwatchTime(stopwatchTime)
             setIsRunning(isRunning)
+            document.title = getTitle(isRunning, stopwatchTime, 'CONNECTED')
           } catch (parseError) {
             console.error('Failed to parse SSE data:', parseError)
             setError('Invalid data received from server')
@@ -88,7 +89,7 @@ export const StopwatchProvider = ({ children }: PropType) => {
         console.error('Exception. Failed to create EventSource:', connectionError)
         setError('Failed to establish connection')
         setConnectionState('ERROR')
-        document.title = getTitle(isRunning, stopwatchTime, connectionState)
+        document.title = getTitle(isRunning, stopwatchTime, 'ERROR')
       }
     }
     connectEventSource()
