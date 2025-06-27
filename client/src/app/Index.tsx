@@ -7,7 +7,7 @@ import { cn } from '../utils/cssUtils'
 let wakeLock = null
 
 function Index() {
-  const { connectionState, error, stopwatchTime, isRunning, play, pause, reset } = useStopwatch()
+  const { error, stopwatchTime, isRunning, play, pause, reset } = useStopwatch()
   const [showControls, setShowControls] = useState(false)
   const [blinkingPauseIndicator, setBlinkingPauseIndicator] = useState(false)
 

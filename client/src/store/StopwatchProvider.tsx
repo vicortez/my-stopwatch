@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from 'react'
 import type { ConnectionState, StopwatchData, StopwatchTime } from '../types/models'
+import { getBaseUrl } from '../utils/apiUtils'
 import { padTime } from '../utils/timeUtils'
 
 const formatTime = (time: StopwatchTime) =>
@@ -32,7 +33,6 @@ interface PropType {
 //   stopwatchTime: defaultStopwatchTime,
 // }
 
-const url = '/api/stopwatch'
 const defaultStopwatchTime: StopwatchTime = { hours: 0, minutes: 0, seconds: 0 }
 const StopwatchContext = createContext<IStopwatchContext | null>(null)
 export const StopwatchProvider = ({ children }: PropType) => {
@@ -42,13 +42,13 @@ export const StopwatchProvider = ({ children }: PropType) => {
   const [stopwatchTime, setStopwatchTime] = useState<StopwatchTime>(defaultStopwatchTime)
 
   const play = useCallback(async () => {
-    await fetch(`${url}/play`, { method: 'POST' })
+    await fetch(`${getBaseUrl()}/play`, { method: 'POST' })
   }, [])
   const pause = useCallback(async () => {
-    await fetch(`${url}/pause`, { method: 'POST' })
+    await fetch(`${getBaseUrl()}/pause`, { method: 'POST' })
   }, [])
   const reset = useCallback(async () => {
-    await fetch(`${url}/reset`, { method: 'POST' })
+    await fetch(`${getBaseUrl()}/reset`, { method: 'POST' })
   }, [])
 
   const eventSourceRef = useRef<EventSource>(null)
@@ -57,7 +57,7 @@ export const StopwatchProvider = ({ children }: PropType) => {
     console.log('Will configure eventsource connection')
     const connectEventSource = () => {
       try {
-        const eventSource = new EventSource(`${url}/consume`)
+        const eventSource = new EventSource(`${getBaseUrl()}/consume`)
         eventSourceRef.current = eventSource
         console.log('EventSource object created' + eventSource)
 
