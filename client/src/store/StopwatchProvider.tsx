@@ -10,10 +10,20 @@ import {
 } from 'react'
 import type { ConnectionState, StopwatchData, StopwatchTime } from '../types/models'
 import { getBaseUrl } from '../utils/apiUtils'
+import { generateCode } from '../utils/randomUtils'
 import { padTime } from '../utils/timeUtils'
 
 const formatTime = (time: StopwatchTime) =>
   `${padTime(time.hours)}:${padTime(time.minutes)}:${padTime(time.seconds)}`
+
+function getOrCreateSessionCodeInURL(): string {
+  let code = window.location.pathname.split('/').pop()
+  if (!code) {
+    code = generateCode()
+    window.location.href = `/${code}`
+  }
+  return code
+}
 
 interface IStopwatchContext {
   connectionState: ConnectionState
@@ -40,15 +50,18 @@ export const StopwatchProvider = ({ children }: PropType) => {
   const [error, setError] = useState<string | null>(null)
   const [isRunning, setIsRunning] = useState<boolean>(false)
   const [stopwatchTime, setStopwatchTime] = useState<StopwatchTime>(defaultStopwatchTime)
+  const [sessionCode, setSessionCode] = useState<string>(() => {
+    return getOrCreateSessionCodeInURL()
+  })
 
   const play = useCallback(async () => {
-    await fetch(`${getBaseUrl()}/play`, { method: 'POST' })
+    await fetch(`${getBaseUrl()}/play?session=${sessionCode}`, { method: 'POST' })
   }, [])
   const pause = useCallback(async () => {
-    await fetch(`${getBaseUrl()}/pause`, { method: 'POST' })
+    await fetch(`${getBaseUrl()}/pause?session=${sessionCode}`, { method: 'POST' })
   }, [])
   const reset = useCallback(async () => {
-    await fetch(`${getBaseUrl()}/reset`, { method: 'POST' })
+    await fetch(`${getBaseUrl()}/reset?session=${sessionCode}`, { method: 'POST' })
   }, [])
 
   const eventSourceRef = useRef<EventSource>(null)
@@ -57,7 +70,7 @@ export const StopwatchProvider = ({ children }: PropType) => {
     console.log('Will configure eventsource connection')
     const connectEventSource = () => {
       try {
-        const eventSource = new EventSource(`${getBaseUrl()}/consume`)
+        const eventSource = new EventSource(`${getBaseUrl()}/consume?session=${sessionCode}`)
         eventSourceRef.current = eventSource
         console.log('EventSource object created' + eventSource)
 
