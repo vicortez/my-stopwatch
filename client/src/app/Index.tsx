@@ -42,7 +42,7 @@ function Index() {
         clearInterval(blinkingIntervalRef.current)
       }
     }
-  }, [isRunning])
+  }, [isRunning, stopwatchTime])
 
   const requestWakeLock = async () => {
     try {
@@ -88,25 +88,13 @@ function Index() {
         onTouchStart={handleTouch}
       >
         <section className="min-h-screen min-w-screen flex items-center justify-center">
-          <div className={cn(`py-2 px-4`)}>
+          <div className={cn(`py-2`)}>
             <Clock
               className={cn({ 'text-gray-500': blinkingPauseIndicator }, 'date-text')}
               hours={stopwatchTime.hours}
               minutes={stopwatchTime.minutes}
               seconds={stopwatchTime.seconds}
             ></Clock>
-            <div
-              className={cn(
-                'flex flex-col justify-center transition-all duration-900 ease-in-out overflow-hidden',
-                {
-                  'max-h-20 opacity-100 translate-y-0': showControls,
-                  'max-h-20 opacity-0 translate-y-4': !showControls,
-                }
-              )}
-            >
-              <br />
-              {/* <div className="text-xs">Connection State: {connectionState}</div> */}
-            </div>
           </div>
         </section>
         <div
@@ -118,7 +106,7 @@ function Index() {
             }
           )}
         >
-          <div className="flex gap-2 py-1 sm:py-4 px-4">
+          <div className="flex gap-2 py-1 sm:py-4 px-4 text-xs sm:text-base">
             <button type="button" onClick={() => (isRunning ? pause() : play())}>
               {isRunning ? 'Pause' : 'Play'}
             </button>

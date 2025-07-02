@@ -10,8 +10,9 @@
   --font-sevenseg: 'DSEG7 Classic', monospace;
 }
 
+/* Use this to unset all default breakpoints */
+/* --breakpoint-*: initial; */
 @theme {
-  /* --breakpoint-*: initial; */
   --breakpoint-xs: 20rem;
 }
 
@@ -52,22 +53,40 @@ body {
   min-height: 100vh;
 }
 
+/* Prevent selection of text on mobile */
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+@layer base {
+  button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
+
+  @media (max-width: 20rem) {
+    button {
+      padding: 0.375rem 0.625rem; /* smaller padding for native app small window */
+      color: red;
+    }
+  }
 }
+
 button:hover {
   border-color: #646cff;
 }
