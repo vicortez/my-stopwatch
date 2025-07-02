@@ -1,0 +1,102 @@
+{
+  "name": "stopwatch-native",
+  "version": "1.0.0",
+  "description": "Native client for cortez stowpatch. Made with Electron, React, TS, TailWindCSS.",
+  "main": "dist/main/index.js",
+  "author": "cortez.top",
+  "homepage": "https://apps.cortez.top",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint --cache .",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "start": "electron-vite preview --outDir=dist",
+    "dev": "electron-vite dev --outDir=dist",
+    "package": "electron-vite build --outDir=dist && electron-forge package",
+    "make ": "electron-vite build --outDir=dist && electron-forge make",
+    "build": "npm run typecheck && electron-vite build",
+    "build-nocheck": "electron-vite build --outDir=dist",
+    "postinstall": "electron-builder install-app-deps",
+    "build:unpack": "npm run build && electron-builder --dir",
+    "build:win": "npm run build-nocheck && electron-builder --win",
+    "build:win:portable": "npm run build-nocheck && electron-builder --win portable",
+    "build:win:nsis": "npm run build-nocheck && electron-builder --win nsis",
+    "build:mac": "electron-vite build && electron-builder --mac",
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "showconfig": "tsc --showConfig"
+  },
+  "build": {
+    "appId": "com.cortez.stopwatch-native",
+    "productName": "stopwatch native cortez",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "publisherName": "Your Company Name"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "dependencies": {
+    "@electron-forge/cli": "^7.8.1",
+    "@electron-forge/maker-deb": "^7.8.1",
+    "@electron-forge/maker-rpm": "^7.8.1",
+    "@electron-forge/maker-squirrel": "^7.8.1",
+    "@electron-forge/maker-zip": "^7.8.1",
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/utils": "^4.0.0",
+    "@fontsource/dseg7-classic": "^5.2.5",
+    "@radix-ui/react-switch": "^1.2.5",
+    "@tailwindcss/vite": "^4.1.11",
+    "clsx": "^2.1.1",
+    "electron-updater": "^6.3.9",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.11"
+  },
+  "devDependencies": {
+    "@electron-toolkit/eslint-config-prettier": "^3.0.0",
+    "@electron-toolkit/eslint-config-ts": "^3.0.0",
+    "@electron-toolkit/tsconfig": "^1.0.1",
+    "@types/node": "^22.14.1",
+    "@types/react": "^19.1.1",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^35.1.5",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^3.1.0",
+    "eslint": "^9.24.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "prettier": "^3.5.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.2.6"
+  }
+}
