@@ -1,6 +1,6 @@
 {
   "name": "stopwatch-native",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Native client for cortez stowpatch. Made with Electron, React, TS, TailWindCSS.",
   "main": "dist/main/index.js",
   "author": "cortez.top",

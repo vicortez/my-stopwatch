@@ -17,10 +17,23 @@ const formatTime = (time: StopwatchTime) =>
   `${padTime(time.hours)}:${padTime(time.minutes)}:${padTime(time.seconds)}`
 
 function getOrCreateSessionCodeInURL(): string {
+  console.log(typeof import.meta.env.RENDERER_VITE_IS_DESKTOP_APP)
+  if (import.meta.env.RENDERER_VITE_IS_DESKTOP_APP) {
+    return handleGetOrCreateSessionCodeInDesktopApp()
+  }
   let code = window.location.pathname.split('/').pop()
   if (!code) {
     code = generateCode()
     window.location.href = `/${code}`
+  }
+  return code
+}
+function handleGetOrCreateSessionCodeInDesktopApp() {
+  let code = window.location.hash.slice(1)
+  if (!code) {
+    console.log('Session code not found. Generating one..')
+    code = generateCode()
+    window.location.hash = code
   }
   return code
 }
@@ -45,6 +58,7 @@ interface PropType {
 
 const defaultStopwatchTime: StopwatchTime = { hours: 0, minutes: 0, seconds: 0 }
 const StopwatchContext = createContext<IStopwatchContext | null>(null)
+
 export const StopwatchProvider = ({ children }: PropType) => {
   const [connectionState, setConnectionState] = useState<ConnectionState>('DISCONNECTED')
   const [error, setError] = useState<string | null>(null)
@@ -56,13 +70,13 @@ export const StopwatchProvider = ({ children }: PropType) => {
 
   const play = useCallback(async () => {
     await fetch(`${getBaseUrl()}/play?session=${sessionCode}`, { method: 'POST' })
-  }, [])
+  }, [sessionCode])
   const pause = useCallback(async () => {
     await fetch(`${getBaseUrl()}/pause?session=${sessionCode}`, { method: 'POST' })
-  }, [])
+  }, [sessionCode])
   const reset = useCallback(async () => {
     await fetch(`${getBaseUrl()}/reset?session=${sessionCode}`, { method: 'POST' })
-  }, [])
+  }, [sessionCode])
 
   const eventSourceRef = useRef<EventSource>(null)
 
@@ -114,7 +128,28 @@ export const StopwatchProvider = ({ children }: PropType) => {
       }
       setConnectionState('DISCONNECTED')
     }
-  }, [])
+  }, [sessionCode])
+
+  // Listen for hash changes (for desktop app)
+  useEffect(() => {
+    if (!import.meta.env.RENDERER_VITE_IS_DESKTOP_APP) {
+      return // Only listen in desktop app
+    }
+
+    const handleHashChange = () => {
+      const newCode = window.location.hash.slice(1)
+      console.log('Detected new code: ', newCode)
+      if (newCode && newCode !== sessionCode) {
+        setSessionCode(newCode)
+      }
+    }
+
+    window.addEventListener('hashchange', handleHashChange)
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange)
+    }
+  }, [sessionCode])
 
   const contextValue = useMemo(
     () => ({

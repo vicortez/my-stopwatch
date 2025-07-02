@@ -7,25 +7,23 @@ const router = express.Router()
 // const stopwatch = new Stopwatch()
 const stopwatchesBySession: Record<string, Stopwatch> = {}
 
-// cleanup sessions if no subscribers every 24h
+// cleanup sessions if no subscribers every hour
 setInterval(() => {
-  console.log(
-    `Will run cleanup function. Current number of active stopwatches: ${
-      Object.keys(stopwatchesBySession).length
-    }`
-  )
+  const len = Object.keys(stopwatchesBySession).length
+  console.log(`Will run cleanup function. Current number of active stopwatches: ${len}`)
   Object.keys(stopwatchesBySession).forEach((sessionCode) => {
     if (stopwatchesBySession[sessionCode].subscribedEventHandlers.size < 1) {
       console.log(`${sessionCode} had no subscribers. Removing.`)
       delete stopwatchesBySession[sessionCode]
     }
   })
+  const newLen = Object.keys(stopwatchesBySession).length
   console.log(
-    `Ran cleanup function. Current number of active stopwatches: ${
-      Object.keys(stopwatchesBySession).length
-    }`
+    `Ran cleanup function. Current number of active stopwatches: ${newLen}. Cleaned ${
+      len - newLen
+    } stopwatches.`
   )
-}, 24 * 60 * 60 * 1000)
+}, 60 * 60 * 1000)
 
 router.get('/consume', (req: Request, res: Response) => {
   console.log('Initializing consumption of stopwatch by call to', req.url)
