@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Clock from '../components/clock/Clock'
+import { useFullScreen } from '../hooks/useFullScreen'
 import { useKeepAlive } from '../hooks/useKeepAlive'
 import { useStopwatch } from '../store/StopwatchProvider'
 import { cn } from '../utils/cssUtils'
@@ -10,6 +11,7 @@ function Index() {
   const { error, stopwatchTime, isRunning, play, pause, reset } = useStopwatch()
   const [showControls, setShowControls] = useState(false)
   const [blinkingPauseIndicator, setBlinkingPauseIndicator] = useState(false)
+  const { toggleFullScreen } = useFullScreen()
 
   const intervalRef = useRef<number | null>(null)
 
@@ -112,6 +114,9 @@ function Index() {
             </button>
             <button type="button" onClick={reset}>
               Reset
+            </button>
+            <button type="button" onClick={toggleFullScreen} className="bg-transparent">
+              ⛶
             </button>
           </div>
         </div>
