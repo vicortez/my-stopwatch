@@ -13,7 +13,7 @@
 /* Use this to unset all default breakpoints */
 /* --breakpoint-*: initial; */
 @theme {
-  --breakpoint-xs: 20rem;
+  --breakpoint-xs: 30rem; /** ~480px. tw default sm = 40rem ~640px */
 }
 
 @import '@fontsource/dseg7-classic';

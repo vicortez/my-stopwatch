@@ -2,5 +2,6 @@
 font size be dependent on the outside container width and have the clock component just
 try to fill its parent with text. */
 .clock {
-  font-size: clamp(2rem, 17vw, 12rem);
+  font-size: round(down, clamp(2rem, 17vw, 12rem), 1rem);
+  text-shadow: 0 0 1px currentColor;
 }
